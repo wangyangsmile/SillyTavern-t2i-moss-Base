@@ -1,0 +1,11 @@
+# 开发用产物，不随仓库发布
+test/
+tools/
+docs/
+test-out/
+
+# 系统杂物
+.DS_Store
+Thumbs.db
+*.log
+node_modules/

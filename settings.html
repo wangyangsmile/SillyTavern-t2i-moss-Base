@@ -1,0 +1,185 @@
+<div class="moss-settings">
+    <div class="inline-drawer">
+        <div class="inline-drawer-toggle inline-drawer-header">
+            <b>MOSS 插画 · 本地 ComfyUI</b>
+            <div class="inline-drawer-icon fa-solid fa-circle-chevron-down down"></div>
+        </div>
+        <div class="inline-drawer-content">
+
+            <label class="checkbox_label" for="moss-enabled">
+                <input type="checkbox" id="moss-enabled">
+                <span>启用（关掉后不再自动生图，手动按钮也隐藏）</span>
+            </label>
+
+            <div class="moss-row">
+                <div class="moss-field">
+                    <label for="moss-base">ComfyUI 地址</label>
+                    <input class="text_pole" id="moss-base" placeholder="http://127.0.0.1:8188">
+                </div>
+                <button class="menu_button" id="moss-connect">连接同步</button>
+            </div>
+            <label class="checkbox_label" for="moss-stproxy">
+                <input type="checkbox" id="moss-stproxy">
+                <span>直连失败时走酒馆代理（需在酒馆设置里打开 enableCorsProxy）</span>
+            </label>
+            <div class="moss-status" id="moss-conn-status">还没连接</div>
+
+            <hr>
+
+            <div class="moss-field">
+                <label for="moss-wf">工作流</label>
+                <div class="moss-row">
+                    <select class="text_pole" id="moss-wf"></select>
+                    <button class="menu_button" id="moss-wf-import">导入 JSON</button>
+                    <button class="menu_button" id="moss-wf-del">删除</button>
+                </div>
+                <input type="file" id="moss-wf-file" accept=".json,application/json" hidden>
+            </div>
+            <details class="moss-details">
+                <summary>粘贴工作流 JSON</summary>
+                <textarea class="text_pole" id="moss-wf-paste" rows="5" placeholder="ComfyUI 开 Dev Mode → Export (API)，把 JSON 粘进来"></textarea>
+                <div class="moss-row">
+                    <input class="text_pole" id="moss-wf-paste-name" placeholder="命名">
+                    <button class="menu_button" id="moss-wf-paste-add">加入</button>
+                </div>
+            </details>
+            <div class="moss-summary" id="moss-wf-summary">—</div>
+
+            <details class="moss-details">
+                <summary>节点映射（一般不用改）</summary>
+                <div class="moss-field">
+                    <label for="moss-pos-node">正面提示词节点</label>
+                    <select class="text_pole" id="moss-pos-node"></select>
+                </div>
+                <div class="moss-field">
+                    <label for="moss-pos-mode">写入方式</label>
+                    <select class="text_pole" id="moss-pos-mode">
+                        <option value="replace">替换节点原词</option>
+                        <option value="append">追加到原词后</option>
+                    </select>
+                </div>
+                <div class="moss-field">
+                    <label for="moss-neg-node">负面提示词节点</label>
+                    <select class="text_pole" id="moss-neg-node"></select>
+                </div>
+                <div class="moss-field">
+                    <label for="moss-neg-text">负面词</label>
+                    <textarea class="text_pole" id="moss-neg-text" rows="2" placeholder="低质量, bad hands"></textarea>
+                </div>
+                <label class="checkbox_label" for="moss-override-size">
+                    <input type="checkbox" id="moss-override-size">
+                    <span>用下面选的尺寸覆盖工作流分辨率</span>
+                </label>
+                <label class="checkbox_label" for="moss-override-model">
+                    <input type="checkbox" id="moss-override-model">
+                    <span>用下面选的模型覆盖工作流</span>
+                </label>
+                <div class="moss-field">
+                    <label for="moss-model">主模型</label>
+                    <div class="moss-row">
+                        <input class="text_pole" id="moss-model" list="moss-model-list" placeholder="Moss\...safetensors">
+                        <datalist id="moss-model-list"></datalist>
+                        <button class="menu_button" id="moss-refresh-models">刷新</button>
+                    </div>
+                </div>
+            </details>
+
+            <div class="moss-row">
+                <div class="moss-field">
+                    <label for="moss-size">尺寸</label>
+                    <select class="text_pole" id="moss-size">
+                        <option value="follow">跟随工作流</option>
+                        <option value="p9x16">竖图 1088×1920</option>
+                        <option value="p2x3">竖图 832×1216</option>
+                        <option value="square">方形 1024×1024</option>
+                        <option value="w16x9">横图 1920×1088</option>
+                        <option value="w3x2">横图 1216×832</option>
+                    </select>
+                </div>
+                <div class="moss-field">
+                    <label for="moss-llm-mode">解析输出</label>
+                    <select class="text_pole" id="moss-llm-mode">
+                        <option value="natural">中文画面描述（MOSS 推荐）</option>
+                        <option value="tags">英文 Danbooru 标签</option>
+                    </select>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="moss-field">
+                <label for="moss-trigger">正文里的配图块怎么处理</label>
+                <select class="text_pole" id="moss-trigger">
+                    <option value="card">显示成「标题 + 生图按钮」的卡片，点一下才画（推荐）</option>
+                    <option value="auto">直接开画，不用点</option>
+                    <option value="off">什么都不做，只用手动按钮</option>
+                </select>
+                <div class="moss-hint">
+                    这条路要在世界书里教 AI 写配图块，格式是一行、标题放属性里：<br>
+                    <code>&lt;photo title="窗边的午后" kind="scene"&gt;午后的光斜着落在木桌上……&lt;/photo&gt;</code><br>
+                    酒馆渲染后这段会被摊成普通正文，扩展把它找出来换成一个短标题和「生图」按钮，
+                    提示词的原文照样留在聊天记录里（模型下一轮还能看见，人物外观才记得住），
+                    只是前端不显示。选「直接开画」的话，每块都会立刻排队生成。
+                </div>
+            </div>
+            <div class="moss-field">
+                <label for="moss-parse">提示词怎么来</label>
+                <select class="text_pole" id="moss-parse">
+                    <option value="model">当前对话模型解析正文（慢一点，最贴剧情）</option>
+                    <option value="dict">离线词典（快，不耗 token）</option>
+                    <option value="tag">只用配图块里写好的描述，不解析正文</option>
+                </select>
+            </div>
+
+            <details class="moss-details">
+                <summary>提示词前后缀</summary>
+                <div class="moss-field">
+                    <label for="moss-prefix">前缀（质量词 / 画风）</label>
+                    <input class="text_pole" id="moss-prefix" placeholder="留空即可">
+                </div>
+                <div class="moss-field">
+                    <label for="moss-identity">身份词（角色固定外观）</label>
+                    <input class="text_pole" id="moss-identity" placeholder="银发, 长发, 红瞳">
+                </div>
+                <div class="moss-field">
+                    <label for="moss-suffix">后缀</label>
+                    <input class="text_pole" id="moss-suffix" placeholder="留空即可">
+                </div>
+            </details>
+
+            <details class="moss-details">
+                <summary>采样与运行</summary>
+                <label class="checkbox_label" for="moss-override-sampling">
+                    <input type="checkbox" id="moss-override-sampling">
+                    <span>覆盖工作流的采样参数</span>
+                </label>
+                <div class="moss-row moss-row-4">
+                    <div class="moss-field"><label for="moss-steps">Steps</label><input class="text_pole" id="moss-steps" type="number" min="1" max="100"></div>
+                    <div class="moss-field"><label for="moss-cfg">CFG</label><input class="text_pole" id="moss-cfg" type="number" min="0" max="30" step="0.1"></div>
+                    <div class="moss-field"><label for="moss-sampler">Sampler</label><select class="text_pole" id="moss-sampler"></select></div>
+                    <div class="moss-field"><label for="moss-scheduler">Scheduler</label><select class="text_pole" id="moss-scheduler"></select></div>
+                </div>
+                <div class="moss-row">
+                    <div class="moss-field"><label for="moss-interval">队列间隔（秒）</label><input class="text_pole" id="moss-interval" type="number" min="0" max="60" step="0.5"></div>
+                    <div class="moss-field"><label for="moss-timeout">单张超时（秒）</label><input class="text_pole" id="moss-timeout" type="number" min="30" max="3600" step="10"></div>
+                </div>
+                <label class="checkbox_label" for="moss-caption">
+                    <input type="checkbox" id="moss-caption">
+                    <span>图片下方显示种子和耗时</span>
+                </label>
+            </details>
+
+            <hr>
+
+            <div class="moss-row">
+                <button class="menu_button" id="moss-clear-chat">清掉本聊天的图</button>
+                <button class="menu_button" id="moss-clear-all">清空全部缓存</button>
+            </div>
+            <div class="moss-status" id="moss-store-status">—</div>
+            <div class="moss-hint">
+                图片存在浏览器本地（IndexedDB），聊天记录里只存一小段元数据。
+                换浏览器或清站点数据后图会消失，聊天文本不受影响。
+            </div>
+        </div>
+    </div>
+</div>

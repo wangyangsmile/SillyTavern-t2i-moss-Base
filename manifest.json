@@ -1,0 +1,11 @@
+{
+    "display_name": "MOSS 插画（本地 ComfyUI）",
+    "loading_order": 120,
+    "requires": [],
+    "optional": [],
+    "js": "index.js",
+    "css": "style.css",
+    "author": "wangyangsmile",
+    "version": "1.0.0",
+    "homePage": "https://github.com/wangyangsmile/SillyTavern-t2i-moss-Base"
+}
