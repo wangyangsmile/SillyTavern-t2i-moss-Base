@@ -330,7 +330,7 @@ Grok 那套多行格式渲染后会在正文里留下 `image###` 碎片和一个
 ### 8.2 加一种配图块语法
 只改 `lib/prompt-pipeline.js` 的 `parseBlockInner(attrs, inner)`，按优先级插一段。
 **别动 `parseImageBlocks` 的拆块逻辑** —— 它负责 index/slot 编号，改错了槽位全乱。
-改完必须补 `test/pipeline.mjs` 用例。
+改完必须补一条解析用例（`pipeline` 那一组），否则新的写法会在某次渲染里静默失效。
 
 ### 8.3 改卡片外观
 只改 `style.css` 的 `.moss-card` 一段。注意：
